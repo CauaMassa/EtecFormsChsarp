@@ -55,6 +55,7 @@
             this.txtUF = new System.Windows.Forms.TextBox();
             this.label = new System.Windows.Forms.Label();
             this.txtNome = new System.Windows.Forms.TextBox();
+            this.ofdArquivo = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.picFoto)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvClientes)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -114,6 +115,7 @@
             this.picFoto.Size = new System.Drawing.Size(204, 178);
             this.picFoto.TabIndex = 6;
             this.picFoto.TabStop = false;
+            this.picFoto.Click += new System.EventHandler(this.picFoto_Click);
             // 
             // label2
             // 
@@ -329,6 +331,10 @@
             this.txtNome.Size = new System.Drawing.Size(523, 26);
             this.txtNome.TabIndex = 33;
             // 
+            // ofdArquivo
+            // 
+            this.ofdArquivo.FileName = "ofdArquivo";
+            // 
             // FrmClientes
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -396,5 +402,6 @@
         private System.Windows.Forms.TextBox txtUF;
         private System.Windows.Forms.Label label;
         private System.Windows.Forms.TextBox txtNome;
+        private System.Windows.Forms.OpenFileDialog ofdArquivo;
     }
 }

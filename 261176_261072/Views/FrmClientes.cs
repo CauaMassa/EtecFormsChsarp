@@ -21,6 +21,15 @@ namespace _261176_261072.Views
             InitializeComponent();
         }
 
+        void carregarGrid(string pesquisa)
+        {
+            cl = new Cliente()
+            {
+                nome = pesquisa
+            }; 
+            dgvClientes.DataSource = cl.Consultar();
+        }
+
         void limpaControles()
         {
             txtId.Clear();
@@ -150,6 +159,14 @@ namespace _261176_261072.Views
         private void btnFechar_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void picFoto_Click(object sender, EventArgs e)
+        {
+            ofdArquivo.InitialDirectory = "D:/fotos/clientes/";
+            ofdArquivo.FileName = "";
+            ofdArquivo.ShowDialog();
+            picFoto.ImageLocation = ofdArquivo.FileName;
         }
     }
 }
