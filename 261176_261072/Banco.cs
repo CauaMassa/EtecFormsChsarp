@@ -30,7 +30,7 @@ namespace _261176_261072
             try
             {
                 // Estabelece os parâmetros para a conexão com o banco
-                Conexao = new MySqlConnection("server=localhost;port=3307;uid=root;pwd=");
+                Conexao = new MySqlConnection("server=localhost;port=3307;uid=root;pwd=etecjau");
 
                 // Abre a conexão com o banco de dados
                 Conexao.Open();
@@ -62,13 +62,15 @@ namespace _261176_261072
                 Comando = new MySqlCommand("CREATE DATABASE IF NOT EXISTS vendas; USE vendas", Conexao);
                 Comando.ExecuteNonQuery();
 
-                Comando = new MySqlCommand("CREATE TABLE IF NOT EXISTS cidades" + "(id integer auto_increment primary key," + "nome char(40)," + "uf char(02))", Conexao);
+                Comando = new MySqlCommand("CREATE TABLE IF NOT EXISTS cidades (id integer auto_increment primary key, nome char(40), uf char(02))", Conexao);
                 Comando.ExecuteNonQuery();
 
-                Comando = new MySqlCommand("CREATE TABLE IF NOT EXISTS Marcas" + "(id integer auto_increment primary key, " + "marca char(20))", Conexao);
+                Comando = new MySqlCommand("CREATE TABLE IF NOT EXISTS Marcas (id integer auto_increment primary key, marca char(20))", Conexao);
                 Comando.ExecuteNonQuery();
 
-                Comando = new MySqlCommand("CREATE TABLE IF NOT EXISTS Categorias" + "(id integer auto_increment primary key, " + "categoria char(20))", Conexao);
+                Comando = new MySqlCommand("CREATE TABLE IF NOT EXISTS Categorias " +
+                           "(id integer auto_increment primary key, " +
+                           "categoria char(20))", Conexao);
                 Comando.ExecuteNonQuery();
 
                 Comando = new MySqlCommand("CREATE TABLE IF NOT EXISTS Clientes " +

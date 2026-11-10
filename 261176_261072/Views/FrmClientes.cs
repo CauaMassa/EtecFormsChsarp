@@ -26,7 +26,7 @@ namespace _261176_261072.Views
             cl = new Cliente()
             {
                 nome = pesquisa
-            }; 
+            };
             dgvClientes.DataSource = cl.Consultar();
         }
 
@@ -64,8 +64,13 @@ namespace _261176_261072.Views
         {
             if (cboCidades.SelectedIndex != -1)
             {
-                DataRowView reg = (DataRowView)cboCidades.SelectedItem;
-                txtUF.Text = reg["uf"].ToString();
+                DataRowView reg = cboCidades.SelectedItem as DataRowView;
+                if (reg != null)
+                    txtUF.Text = reg["uf"].ToString();
+            }
+            else
+            {
+                txtUF.Clear();
             }
         }
 
@@ -73,12 +78,28 @@ namespace _261176_261072.Views
         {
             if (txtNome.Text == "") return;
 
+            if (cboCidades.SelectedIndex == -1)
+            {
+                MessageBox.Show("Selecione uma cidade.", "Atenção",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            double renda;
+            if (!double.TryParse(txtRenda.Text, out renda))
+            {
+                MessageBox.Show("Informe uma renda válida.", "Atenção",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtRenda.Focus();
+                return;
+            }
+
             cl = new Cliente()
             {
                 nome = txtNome.Text,
                 idCidade = (int)cboCidades.SelectedValue,
                 dataNasc = dtpDataNasc.Value,
-                renda = double.Parse(txtRenda.Text),
+                renda = renda,
                 cpf = mskCPF.Text,
                 foto = picFoto.ImageLocation,
                 venda = chkVenda.Checked
@@ -92,23 +113,53 @@ namespace _261176_261072.Views
 
         private void dgvClientes_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (dgvClientes.RowCount > 0)
-            {
-                txtId.Text = dgvClientes.CurrentRow.Cells["id"].Value.ToString();
-                txtNome.Text = dgvClientes.CurrentRow.Cells["nome"].Value.ToString();
-                cboCidades.Text = dgvClientes.CurrentRow.Cells["cidade"].Value.ToString();
-                txtUF.Text = dgvClientes.CurrentRow.Cells["uf"].Value.ToString();
-                chkVenda.Checked = (bool)dgvClientes.CurrentRow.Cells["venda"].Value;
-                mskCPF.Text = dgvClientes.CurrentRow.Cells["cpf"].Value.ToString();
-                dtpDataNasc.Text = dgvClientes.CurrentRow.Cells["dataNasc"].Value.ToString();
-                txtRenda.Text = dgvClientes.CurrentRow.Cells["renda"].Value.ToString();
-                picFoto.ImageLocation = dgvClientes.CurrentRow.Cells["foto"].Value.ToString();
-            }
+            // RowIndex = -1 quando clica no cabeçalho do grid
+            if (e.RowIndex < 0) return;
+
+            DataGridViewRow linha = dgvClientes.Rows[e.RowIndex];
+
+            txtId.Text = linha.Cells["id"].Value.ToString();
+            txtNome.Text = linha.Cells["nome"].Value.ToString();
+
+            // Seleciona a cidade pelo id (mais seguro que usar .Text)
+            if (linha.Cells["idCidade"].Value != DBNull.Value)
+                cboCidades.SelectedValue = Convert.ToInt32(linha.Cells["idCidade"].Value);
+            else
+                cboCidades.SelectedIndex = -1;
+
+            txtUF.Text = linha.Cells["uf"].Value.ToString();
+
+            chkVenda.Checked = linha.Cells["venda"].Value != DBNull.Value
+                               && Convert.ToBoolean(linha.Cells["venda"].Value);
+
+            mskCPF.Text = linha.Cells["cpf"].Value.ToString();
+
+            if (linha.Cells["dataNasc"].Value != DBNull.Value)
+                dtpDataNasc.Value = Convert.ToDateTime(linha.Cells["dataNasc"].Value);
+
+            txtRenda.Text = linha.Cells["renda"].Value.ToString();
+            picFoto.ImageLocation = linha.Cells["foto"].Value.ToString();
         }
 
         private void btnAlterar_Click(object sender, EventArgs e)
         {
             if (txtId.Text == "") return;
+
+            if (cboCidades.SelectedIndex == -1)
+            {
+                MessageBox.Show("Selecione uma cidade.", "Atenção",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            double renda;
+            if (!double.TryParse(txtRenda.Text, out renda))
+            {
+                MessageBox.Show("Informe uma renda válida.", "Atenção",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtRenda.Focus();
+                return;
+            }
 
             cl = new Cliente()
             {
@@ -116,7 +167,7 @@ namespace _261176_261072.Views
                 nome = txtNome.Text,
                 idCidade = (int)cboCidades.SelectedValue,
                 dataNasc = dtpDataNasc.Value,
-                renda = double.Parse(txtRenda.Text),
+                renda = renda,
                 cpf = mskCPF.Text,
                 foto = picFoto.ImageLocation,
                 venda = chkVenda.Checked
@@ -165,8 +216,11 @@ namespace _261176_261072.Views
         {
             ofdArquivo.InitialDirectory = "D:/fotos/clientes/";
             ofdArquivo.FileName = "";
-            ofdArquivo.ShowDialog();
-            picFoto.ImageLocation = ofdArquivo.FileName;
+            ofdArquivo.Filter = "Imagens|*.jpg;*.jpeg;*.png;*.bmp;*.gif";
+
+            // Só troca a foto se o usuário realmente escolheu um arquivo
+            if (ofdArquivo.ShowDialog() == DialogResult.OK)
+                picFoto.ImageLocation = ofdArquivo.FileName;
         }
     }
 }
