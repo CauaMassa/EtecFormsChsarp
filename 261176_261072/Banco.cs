@@ -84,6 +84,15 @@ namespace _261176_261072
                     "venda boolean)", Conexao);
                 Comando.ExecuteNonQuery();
 
+                Comando = new MySqlCommand("CREATE TABLE IF NOT EXISTS Produtos (id integer auto_increment primary key, " +
+                    "descricao char (40), " +
+                    "idCategoria integer," +
+                    "idMarca integer," +
+                    "estoque decimal(10,3), " +
+                    "valorVenda decimal(10,2), " +
+                    "foto varchar(100)) ", Conexao);
+                Comando.ExecuteNonQuery();
+
                 fecharConexao();
             }
             catch (Exception e)
